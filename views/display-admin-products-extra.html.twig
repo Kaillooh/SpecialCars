@@ -1,0 +1,61 @@
+<div class="row" >
+    <div class="col-md-12">
+        <div class="form-group">
+
+            <textarea id="model_hierarchy" class="serp-watched-description form-control" rows="8" onchange="updateAttributes(this.id, 'form_model_hierarchy_1');" style="display:none;"></textarea>
+
+            <h2>Categories</h2>
+
+            <div id="tree_nav">
+                <button type="button" class="btn btn-outline-secondary" id="tree_nav_back">Back</button>
+                <button type="button" class="btn btn-outline-secondary" id="tree_nav_new">New</button>
+                <input type="text" id="tree_new_element" class=""></input>
+            </div>
+            <br/>
+            <div id="tree_display">
+                <button type="button" class="btn btn-block btn-outline-secondary">Mercedes-Benz</button>
+                <button type="button" class="btn btn-block btn-outline-secondary">BMW</button>
+                <button type="button" class="btn btn-block btn-outline-secondary">Rolls-Royce</button>
+            </div>
+            
+
+            <div style="display:none;">
+
+                <h3>Car Model</h3>
+                {{ form_errors(form.car_model) }}
+                {{ form_widget(form.car_model) }}
+
+                <br/>
+                <h3>Car Type</h3>
+                {{ form_errors(form.car_type) }}
+                {{ form_widget(form.car_type) }}
+
+                <br/>
+                <h3>Car Version</h3>
+                {{ form_errors(form.car_version) }}
+                {{ form_widget(form.car_version) }}
+
+                <br/>
+                <h3>Serial Number</h3>
+                {{ form_errors(form.car_number) }}
+                {{ form_widget(form.car_number) }}
+
+                <br/>
+                <h3>Option Code</h3>
+                {{ form_errors(form.car_option_code) }}
+                {{ form_widget(form.car_option_code) }}
+
+                <br/>
+                <h3>Color Code</h3>
+                {{ form_errors(form.car_color_code) }}
+                {{ form_widget(form.car_color_code) }}
+
+                <br/>
+                <h3>Hierarchy</h3>
+                {{ form_errors(form.model_hierarchy) }}
+                {{ form_widget(form.model_hierarchy) }}
+
+            </div>
+        </div>
+    </div>
+</div>
