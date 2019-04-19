@@ -93,7 +93,12 @@ class SpecialCars extends Module
     public function hookDisplayAdminProductsMainStepLeftColumnMiddle($params){
         try{
             error_log("Hook 'displayAdminProductsMainStepLeftColumnMiddle' running");
+            
             $content = $this->display(__FILE__, 'newfieldstut.tpl');
+
+            $content = $content.$this->display(__FILE__, 'scripts/hierarchy.tpl');
+            $content = $content.$this->display(__FILE__, 'scripts/main_script.tpl');
+
             $id_product = $params['id_product'];
             $content = $content.$this->generateData($id_product);
             // $content = "";
