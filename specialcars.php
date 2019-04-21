@@ -97,6 +97,7 @@ class SpecialCars extends Module
             $content = $this->display(__FILE__, 'newfieldstut.tpl');
 
             $content = $content.$this->display(__FILE__, 'scripts/hierarchy.tpl');
+            $content = $content.$this->display(__FILE__, 'scripts/fields.tpl');
             $content = $content.$this->display(__FILE__, 'scripts/main_script.tpl');
 
             $id_product = $params['id_product'];

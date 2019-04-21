@@ -24,22 +24,22 @@
 
 
 Model
-<br/><input type="text" name="car_model" id="car_model" class="form-control" onchange="updateAttributes(this.id, 'form_car_model_1');"></input>
+<br/><input type="text" name="car_model" id="car_model" class="form-control"></input>
 <br/>
 Type
-<br/><input type="text" name="car_type" id="car_type" class="form-control" onchange="updateAttributes(this.id, 'form_car_type_1');"></input>
+<br/><input type="text" name="car_type" id="car_type" class="form-control"></input>
 <br/>
 Version
-<br/><input type="text" name="car_version" id="car_version" class="form-control" onchange="updateAttributes(this.id, 'form_car_version_1');"></input>
+<br/><input type="text" name="car_version" id="car_version" class="form-control"></input>
 <br/>
 Serial Number
-<br/><input type="text" name="car_number" id="car_number" class="form-control" onchange="updateAttributes(this.id, 'form_car_number_1');"></input>
+<br/><input type="text" name="car_number" id="car_number" class="form-control"></input>
 <br/>
 Option code
-<br/><input type="text" name="car_option_code" id="car_option_code" class="form-control" onchange="updateAttributes(this.id, 'form_car_option_code_1');"></input>
+<br/><input type="text" name="car_option_code" id="car_option_code" class="form-control"></input>
 <br/>
 Color code
-<br/><input type="text" name="car_color_code" id="car_color_code" class="form-control" onchange="updateAttributes(this.id, 'form_car_color_code_1');"></input>
+<br/><input type="text" name="car_color_code" id="car_color_code" class="form-control"></input>
 
 
 
