@@ -18,8 +18,6 @@
 			this.loadFieldContent();
 			console.log("Setup sync");
 			this.setupSync();
-
-			this.car_field_controller = new CarFieldController(hierarchy_controller);
 		}
 
 		loadFieldContent(){
@@ -51,9 +49,7 @@
 			var controller = this;
 
 			for (const source_field_id of source_fields) {
-				console.log("Attempting to load field '"+source_field_id+"'");
 				var source_field = document.getElementById(source_field_id);
-				console.log(source_field)
 
 				const target_field_id = this.field_list[source_field_id];
 
@@ -73,6 +69,7 @@
 			console.log("Creating new CarFieldController")
 			this.hierarchy = hierarchy_controller;
 
+
 			this.fields_id = {
 				"car_model" : "car_model",
 				"car_type" : "car_type",
@@ -81,11 +78,15 @@
 
 			this.fields_order = ["", "car_model", "car_type", "car_version"];
 
-			this.fields = {};
+			this.fields = this.generateFieldIndex();
+			console.log("Generating field index");
+			console.log(this.fields);
 
+			this.updateAllBuckets();
 			console.log("Binding listeners for CarFieldController validation process")
 			this.bindListeners();
 		}
+
 
 		bindListeners() {
 			var field_keys = Object.keys(this.fields);
@@ -100,16 +101,34 @@
 			}
 		}
 
+		generateFieldIndex() {
+			var field_key_list = Object.keys(this.fields_id);
+			var rslt = {}
+
+			for (const field_key of field_key_list) {
+				var field_id = this.fields_id[field_key];
+				rslt[field_key] = document.getElementById(field_id);
+			}
+
+			return rslt;
+		}
+
 		updateAllBuckets() {
 			var field_list = Object.keys(this.fields);
 
-			for (const field_key in field_list) {
-				updateBucket(field_key);
+			console.log("Updating all buckets from");
+			console.log(field_list);
+
+			for (const field_key of field_list) {
+
+				this.updateBucket(field_key);
 			}
 		}
 
 		updateBucket(field_key) {
-			var options = getAllowedChildren(field_keys);
+			console.log("Attempting to load bucket for '"+field_key+"'");
+			var options = this.getAllowedValues(field_key);
+			console.log(options);
 			var id = this.fields_id[field_key]
 
 			$('#'+id).autocomplete({
@@ -129,14 +148,14 @@
 		validateAllFields() {
 			var field_list = Object.keys(this.fields);
 
-			for(const key in field_list){
-				validateField(key);
+			for(const key of field_list){
+				this.validateField(key);
 			}
 		}
 
 		validateField(field_key) {
-			field = this.fields[field_key];
-	        var allowed_values = getAllowedValues(field_key);
+			var field = this.fields[field_key];
+	        var allowed_values = this.getAllowedValues(field_key);
 
 	        if (allowed_values.includes(field.value)){
 	            field.classList.remove("form_wrong");  
@@ -153,28 +172,28 @@
 		}
 
 		getAllowedChildren(field_key) {
-			return Object.keys(getLocalHierarchy(field_keys))
+			return Object.keys(this.getLocalHierarchy(field_key))
 		}
 
 		getLocalHierarchy(field_id) {
-			local_hierarchy = {}
+			var local_hierarchy = {}
 
-	        car_model_txt = this.fields["car_model"].value;
-	        car_type_txt = this.fields["car_type"].value;
+	        var car_model_txt = this.fields["car_model"].value;
+	        var car_type_txt = this.fields["car_type"].value;
 
 	        if (field_id == "")
-	            local_hierarchy = hierarchy.data;
+	            local_hierarchy = this.hierarchy.data;
 
 	        else if (field_id == "car_model"){
-	            if (Object.keys(hierarchy.data).includes(car_model_txt)){
-	                local_hierarchy = hierarchy.data[car_model_txt];
+	            if (Object.keys(this.hierarchy.data).includes(car_model_txt)){
+	                local_hierarchy = this.hierarchy.data[car_model_txt];
 	            }
 	        }
 
 	        else if (field_id == "car_type"){
-	            if (Object.keys(hierarchy.data).includes(car_model_txt)){
-	                if (Object.keys(hierarchy.data[car_model_txt]).includes(car_type_txt)){
-	                    local_hierarchy = hierarchy.data[car_model_txt][car_type_txt];
+	            if (Object.keys(this.hierarchy.data).includes(car_model_txt)){
+	                if (Object.keys(this.hierarchy.data[car_model_txt]).includes(car_type_txt)){
+	                    local_hierarchy = this.hierarchy.data[car_model_txt][car_type_txt];
 	                }                
 	            }
 	        }

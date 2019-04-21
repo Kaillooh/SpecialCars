@@ -5,12 +5,14 @@
 
     $(document).ready(function() {
 
-        field_controller = new CommonFieldController(hierarchy);
+        var field_controller = new CommonFieldController(hierarchy);
         console.log("Loading content ?");
         field_controller.loadFieldContent();
-        
-        hierarchy = new HierarchyController();
+
+        var hierarchy = new HierarchyController();
         hierarchy.renderTreeUI();
+
+        var car_field_controller = new CarFieldController(hierarchy);
 
     })
 
