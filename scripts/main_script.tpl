@@ -14,6 +14,15 @@
 
         var car_field_controller = new CarFieldController(hierarchy);
 
+        console.log("Testing getLocalHierachy for 'car_model'");
+        console.log(car_field_controller.getLocalHierarchy('car_model'));
+
+        console.log("Testing getLocalHierachy for 'car_type'");
+        console.log(car_field_controller.getLocalHierarchy('car_type'));
+
+        console.log("Testing getLocalHierachy for 'car_version'");
+        console.log(car_field_controller.getLocalHierarchy('car_version'));
+
     })
 
     function disp_fields() {

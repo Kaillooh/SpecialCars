@@ -76,7 +76,7 @@
 				"car_version" : "car_version"
 			};
 
-			this.fields_order = ["", "car_model", "car_type", "car_version"];
+			this.fields_order = ["car_model", "car_type", "car_version"];
 
 			this.fields = this.generateFieldIndex();
 			console.log("Generating field index");
@@ -137,15 +137,9 @@
 	        });
 		}
 
-		getParentFieldKey(field_key) {
-			for (var i=0; i<this.fields_order.length; i++){
-				if (this.fields_order[i] == field_key){
-					return this.fields_order[i-1];
-				}
-			}
-		}
-
 		validateAllFields() {
+			this.updateAllBuckets();
+
 			var field_list = Object.keys(this.fields);
 
 			for(const key of field_list){
@@ -167,40 +161,32 @@
 		}
 
 		getAllowedValues(field_key) {
-			var parent_field_key = this.getParentFieldKey(field_key);
-			return Object.keys(this.getLocalHierarchy(parent_field_key));
+			return Object.keys(this.getLocalHierarchy(field_key));
 		}
 
-		getAllowedChildren(field_key) {
-			return Object.keys(this.getLocalHierarchy(field_key))
-		}
+		getLocalHierarchy(field_key) {
+			var local_hierarchy = this.hierarchy.data;
 
-		getLocalHierarchy(field_id) {
-			var local_hierarchy = {}
+	        for (var i=0; i<this.fields_order.length; i++){
+	        	var current_field_key = this.fields_order[i];
 
-	        var car_model_txt = this.fields["car_model"].value;
-	        var car_type_txt = this.fields["car_type"].value;
+	        	if (current_field_key == field_key){
+	        		return local_hierarchy;
+	        	}
+	        	
+	        	else {
+	        		var option_list = Object.keys(local_hierarchy);
+	        		var current_field_value = this.fields[current_field_key].value;
 
-	        if (field_id == "")
-	            local_hierarchy = this.hierarchy.data;
+	        		if (option_list.includes(current_field_value)){
+	        			local_hierarchy = local_hierarchy[current_field_value];
+	        		}
 
-	        else if (field_id == "car_model"){
-	            if (Object.keys(this.hierarchy.data).includes(car_model_txt)){
-	                local_hierarchy = this.hierarchy.data[car_model_txt];
-	            }
+	        		else {
+	        			return {};
+	        		}
+	        	}
 	        }
-
-	        else if (field_id == "car_type"){
-	            if (Object.keys(this.hierarchy.data).includes(car_model_txt)){
-	                if (Object.keys(this.hierarchy.data[car_model_txt]).includes(car_type_txt)){
-	                    local_hierarchy = this.hierarchy.data[car_model_txt][car_type_txt];
-	                }                
-	            }
-	        }
-
-	        console.log(local_hierarchy);
-
-	        return local_hierarchy;
 		}
 
 	}
