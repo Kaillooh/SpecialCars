@@ -3,21 +3,19 @@
 	class CommonFieldController {
 
 		constructor(hierarchy_controller){
-			console.log("Creating new CommonFieldController");
 			this.field_list = {
 				"car_model" : "form_car_model_1", 
 				"car_type" : "form_car_type_1", 
 				"car_version" : "form_car_version_1", 
 				"car_number" : "form_car_number_1", 
 				"car_option_code" : "form_car_option_code_1", 
-				"car_color_code" : "form_car_color_code_1",
+				"car_color_code" : "form_car_color_code_1", 
+				"car_data" : "form_car_data_1",
 				"model_hierarchy" : "form_model_hierarchy_1"
 			};
 
-			console.log("Loading field content ");
 			this.loadFieldContent();
-			console.log("Setup sync");
-			this.setupSync();
+			// this.setupSync();
 		}
 
 		loadFieldContent(){
@@ -30,7 +28,7 @@
 	            var content = custom_field_data[field_key];
 
 	            true_field.value = content;
-	            display_field.value = content;
+	            // display_field.value = content;
 	        }
 		}
 
@@ -65,8 +63,13 @@
 
 	class CarFieldController {
 		
-		constructor(hierarchy_controller) {
+		constructor(input_data, hierarchy_controller) {
 			console.log("Creating new CarFieldController")
+
+			this.car_model = input_data["car_model"];
+			this.car_type = input_data["car_type"];
+			this.car_version = input_data["car_version"];
+
 			this.hierarchy = hierarchy_controller;
 
 
@@ -79,12 +82,25 @@
 			this.fields_order = ["car_model", "car_type", "car_version"];
 
 			this.fields = this.generateFieldIndex();
-			console.log("Generating field index");
-			console.log(this.fields);
 
-			this.updateAllBuckets();
-			console.log("Binding listeners for CarFieldController validation process")
-			this.bindListeners();
+			// this.updateAllBuckets();
+			// this.bindListeners();
+		}
+
+		generateHTML(){
+			var template = document.getElementById("car_field_template");
+			var cars_list = document.getElementById("cars_list");
+
+			var tpl_html = template.innerHTML;
+
+			var car_container = document.createElement('div');
+			car_container.classList.add("car_container");
+			car_container.innerHTML = tpl_html;
+			cars_list.appendChild(car_container);
+
+			car_container.getElementsByClassName("car_model_form")[0].value = this.car_model;
+			car_container.getElementsByClassName("car_type_form")[0].value = this.car_type;
+			car_container.getElementsByClassName("car_version_form")[0].value = this.car_version;
 		}
 
 
@@ -189,6 +205,32 @@
 	        }
 		}
 
+	}
+
+	class CarListController {
+		constructor(hierarchy_controller) {
+			this.hierarchy = hierarchy_controller;
+
+			this.car_list_data = this.getCarListData();
+
+			this.car_list = [];
+
+			this.generateUI();
+		}
+
+		getCarListData(){
+			var raw_json = document.getElementById("form_car_data_1").value;
+			return JSON.parse(raw_json);
+		}
+
+		generateUI(){
+			for (var i=0; i<this.car_list_data.length; i++){
+				var car_data = this.car_list_data[i];
+				var car_field = new CarFieldController(car_data, this.hierarchy);
+				car_field.generateHTML()
+				this.car_list.push(car_field);
+			}
+		}
 	}
 	
 

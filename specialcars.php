@@ -78,9 +78,10 @@ class SpecialCars extends Module
             $car_number = $data[0]['car_number'];
             $car_color_code = $data[0]['car_color_code'];
             $car_option_code = $data[0]['car_option_code'];
+            $car_data = $data[0]['car_data'];
             $product_id = $_REQUEST['form']['id_product'];
             error_log($car_model);
-            $content = "<script>var custom_field_data={'car_model':'".$car_model."', 'car_type':'".$car_type."', 'car_version':'".$car_version."', 'car_number':'".$car_number."', 'car_color_code':'".$car_color_code."', 'car_option_code':'".$car_option_code."', 'model_hierarchy' : '".$model_hierarchy."'};</script>";
+            $content = "<script>var custom_field_data={'car_model':'".$car_model."', 'car_type':'".$car_type."', 'car_version':'".$car_version."', 'car_number':'".$car_number."', 'car_color_code':'".$car_color_code."', 'car_option_code':'".$car_option_code."', 'model_hierarchy' : '".$model_hierarchy."', 'car_data' : '".$car_data."'};</script>";
             return $content;
         } 
         catch (Exception $e){
@@ -164,6 +165,12 @@ class SpecialCars extends Module
                     'hideTabs' => true,
                     'required' => false
                 ))
+                ->add('car_data', TranslateType::class, array(
+                    'label' => 'Car Data',
+                    'locales' => Language::getLanguages(),
+                    'hideTabs' => true,
+                    'required' => false
+                ))
 
             ->getForm()
             ;
@@ -193,10 +200,11 @@ class SpecialCars extends Module
             $car_option_code = $_REQUEST['form']['car_option_code'][1];
             $product_id = $_REQUEST['form']['id_product'];
             $model_hierarchy = $_REQUEST['form']['model_hierarchy'][1];
+            $car_data = $_REQUEST['form']['car_data'][1];
 
             error_log("Model Hierarchy : ".$model_hierarchy);
 
-            $sql_query = "UPDATE `ps_product` SET `car_model`='".$car_model."',`car_type`='".$car_type."',`car_version`='".$car_version."',`car_number`='".$car_number."',`car_option_code`='".$car_option_code."',`car_color_code`='".$car_color_code."' WHERE  `id_product`=".$product_id;
+            $sql_query = "UPDATE `ps_product` SET `car_model`='".$car_model."',`car_type`='".$car_type."',`car_version`='".$car_version."',`car_number`='".$car_number."',`car_option_code`='".$car_option_code."',`car_color_code`='".$car_color_code."',`car_data`='".$car_data."' WHERE  `id_product`=".$product_id;
             error_log("QUERY : ".$sql_query);
             Db::getInstance()->execute($sql_query);
 

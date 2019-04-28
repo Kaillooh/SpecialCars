@@ -56,10 +56,8 @@
 		}
 
 		loadHierarchyData(){
-			var json = document.getElementById("model_hierarchy").value;
-	        console.log(json);
+			var json = document.getElementById("form_model_hierarchy_1").value;
 	        this.data = JSON.parse(json);
-	        console.log(this.data);
 		}
 
 		saveHierarchyData(){
