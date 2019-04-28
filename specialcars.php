@@ -72,16 +72,14 @@ class SpecialCars extends Module
             $model_hierarchy = $data2[0]['full_hierarchy'];
             error_log('Model Hierarchy : '.$model_hierarchy);
 
-            $car_model = $data[0]['car_model'];
-            $car_type = $data[0]['car_type'];
-            $car_version = $data[0]['car_version'];
             $car_number = $data[0]['car_number'];
             $car_color_code = $data[0]['car_color_code'];
             $car_option_code = $data[0]['car_option_code'];
             $car_data = $data[0]['car_data'];
             $product_id = $_REQUEST['form']['id_product'];
-            error_log($car_model);
-            $content = "<script>var custom_field_data={'car_model':'".$car_model."', 'car_type':'".$car_type."', 'car_version':'".$car_version."', 'car_number':'".$car_number."', 'car_color_code':'".$car_color_code."', 'car_option_code':'".$car_option_code."', 'model_hierarchy' : '".$model_hierarchy."', 'car_data' : '".$car_data."'};</script>";
+            error_log("Saving car data : ");
+            error_log($car_data);
+            $content = "<script>var custom_field_data={'car_number':'".$car_number."', 'car_color_code':'".$car_color_code."', 'car_option_code':'".$car_option_code."', 'model_hierarchy' : '".$model_hierarchy."', 'car_data' : '".$car_data."'};</script>";
             return $content;
         } 
         catch (Exception $e){
@@ -117,30 +115,9 @@ class SpecialCars extends Module
             error_log("'hookDisplayAdminProductsExtra' running !");
             $productAdapter = $this->get('prestashop.adapter.data_provider.product');
             $product = $productAdapter->getProduct($params['id_product']);
-            $formData = [
-               'car_model' => $product->car_model,
-               'car_type' => $product->car_type,
-            ];
+            $formData = [];
             $formFactory = $this->get('form.factory');
             $form = $formFactory->createBuilder(FormType::class, $formData)
-                ->add('car_model', TranslateType::class, array(
-                    'label' => 'Car model',
-                    'locales' => Language::getLanguages(),
-                    'hideTabs' => true,
-                    'required' => false
-                ))
-                ->add('car_type', TranslateType::class, array(
-                    'label' => 'Car type',
-                    'locales' => Language::getLanguages(),
-                    'hideTabs' => true,
-                    'required' => false
-                ))
-                ->add('car_version', TranslateType::class, array(
-                    'label' => 'Car version',
-                    'locales' => Language::getLanguages(),
-                    'hideTabs' => true,
-                    'required' => false
-                ))
                 ->add('car_number', TranslateType::class, array(
                     'label' => 'Serial number',
                     'locales' => Language::getLanguages(),
@@ -192,9 +169,6 @@ class SpecialCars extends Module
             $productAdapter = $this->get('prestashop.adapter.data_provider.product');
             $product = $productAdapter->getProduct($_REQUEST['form']['id_product']);
 
-            $car_model = $_REQUEST['form']['car_model'][1];
-            $car_type = $_REQUEST['form']['car_type'][1];
-            $car_version = $_REQUEST['form']['car_version'][1];
             $car_number = $_REQUEST['form']['car_number'][1];
             $car_color_code = $_REQUEST['form']['car_color_code'][1];
             $car_option_code = $_REQUEST['form']['car_option_code'][1];
@@ -204,7 +178,7 @@ class SpecialCars extends Module
 
             error_log("Model Hierarchy : ".$model_hierarchy);
 
-            $sql_query = "UPDATE `ps_product` SET `car_model`='".$car_model."',`car_type`='".$car_type."',`car_version`='".$car_version."',`car_number`='".$car_number."',`car_option_code`='".$car_option_code."',`car_color_code`='".$car_color_code."',`car_data`='".$car_data."' WHERE  `id_product`=".$product_id;
+            $sql_query = "UPDATE `ps_product` SET `car_number`='".$car_number."',`car_option_code`='".$car_option_code."',`car_color_code`='".$car_color_code."',`car_data`='".$car_data."' WHERE  `id_product`=".$product_id;
             error_log("QUERY : ".$sql_query);
             Db::getInstance()->execute($sql_query);
 
