@@ -18,29 +18,42 @@
     }
 
     .car_container{
-        outline: 1px solid #b3b3b3;
+        outline: 1px solid #d9d9d9;
         width:225px;
         padding: 20px;
-        background-color: #f6f6f6;
+        background-color: #fafafa;
         display: inline-block;
         margin: 7px;
 
     }
 
     .car_close_button{
-        display: block;
-        position: absolute;
+        display: inline-block;
         top:50px;
         left:50px;
+        margin-right: auto;
     }
+
+    .align_right {
+        text-align: right;
+        margin-bottom: -24px;
+        margin-top: -11px;
+    }
+
+    .car_model_form, .car_type_form, .car_version_form{
+        padding: 5px;
+        border: 1px solid #d9d9d9;
+    }
+
 </style>
 
 <h2>Cars specifics</h2>
 
-<button type="button" class="btn btn-outline-secondary" id="add_car">Add car</button>
+<button type="button" class="btn btn-outline-secondary" id="add_car_btn">Add car</button>
 <div id="cars_list">
     <template id="car_field_template">
-        <a class="pstaggerClosingCross car_close_button" href="#" data-id="2">x</a>
+        <div class="align_right"><a class="car_close_button" href="javascript:void(0);" >x</a></div>
+        <br/>
         Model
         <br/><input type="text" name="car_model" class="car_model_form" class="form-control"></input>
         <br/>

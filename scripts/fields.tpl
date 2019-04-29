@@ -62,8 +62,8 @@
 
 	class CarFieldController {
 		
-		constructor(input_data, hierarchy_controller, car_list_controller) {
-
+		constructor(input_data, hierarchy_controller, car_list_controller, id) {
+			this.id = id;
 			this.hierarchy = hierarchy_controller;
 			this.car_list_controller = car_list_controller;
 
@@ -94,6 +94,10 @@
 			this.UI_container = car_container;
 		}
 
+		delete(){
+			this.UI_container.parentNode.removeChild(this.UI_container);
+		}
+
 		getField(field_key){
 			return this.UI_container.getElementsByClassName(field_key+"_form")[0];
 		}
@@ -116,19 +120,48 @@
 		            false
 		        );
 			}
+
+			var close_btn = this.UI_container.getElementsByClassName("car_close_button")[0];
+			var car_id = this.id;
+			close_btn.addEventListener(
+	            'click',
+	            function(event){ console.log("Attempting to close car #"+car_id); controller.removeCar(car_id); },
+	            false
+	        );
 		}
 
 	}
 
 	class CarListController {
 		constructor(hierarchy_controller) {
+			this.last_id_given = 0;
 			this.hierarchy = hierarchy_controller;
 
 			this.car_list_data = this.loadData();
 
 			this.car_list = [];
 
+			var controller = this;
+			document.getElementById("add_car_btn").addEventListener(
+	            'click',
+	            function(event){ controller.addNewCar() },
+	            false
+	        );
+
 			this.generateUI();
+		}
+
+		addNewCar(car_data){
+			if (car_data == null){
+					var car_data = {
+					"car_model" : "",
+					"car_type" : "",
+					"car_version" : ""
+				};
+			}
+			var car_field = new CarFieldController(car_data, this.hierarchy, this, this.last_id_given);
+			this.car_list.push(car_field);
+			this.last_id_given += 1;
 		}
 
 		loadData(){
@@ -139,9 +172,19 @@
 		generateUI(){
 			for (var i=0; i<this.car_list_data.length; i++){
 				var car_data = this.car_list_data[i];
-				var car_field = new CarFieldController(car_data, this.hierarchy, this);
-				this.car_list.push(car_field);
+				this.addNewCar(car_data);
 			}
+		}
+
+		removeCar(id){
+			for (var i=0; i<this.car_list.length; i++){
+				var car = this.car_list[i];
+				if (car.id == id){
+					car.delete();
+					this.car_list.splice(id, 1);
+				}
+			}
+			this.onChangeCheckup();
 		}
 
 		onChangeCheckup(){
@@ -174,6 +217,51 @@
 		}
 	}
 	
+	class FieldValidator{
+		constructor(hierarchy){
+			this.hierarchy = hierarchy;
+		}
+
+		update(car_field){
+			var field_keys = ["car_model", "car_type", "car_version"];
+
+			for (var i=0; i<field_keys.length; i++){
+				field_key = field_keys[i];
+				var allowed_values = getAllowedValues(field_key);
+				
+			}
+
+		}
+
+		getAllowedValues(field_key) {
+			return Object.keys(this.getLocalHierarchy(field_key));
+		}
+
+		getLocalHierarchy(field_key) {
+			var local_hierarchy = this.hierarchy.data;
+
+	        for (var i=0; i<this.fields_order.length; i++){
+	        	var current_field_key = this.fields_order[i];
+
+	        	if (current_field_key == field_key){
+	        		return local_hierarchy;
+	        	}
+	        	
+	        	else {
+	        		var option_list = Object.keys(local_hierarchy);
+	        		var current_field_value = this.fields[current_field_key].value;
+
+	        		if (option_list.includes(current_field_value)){
+	        			local_hierarchy = local_hierarchy[current_field_value];
+	        		}
+
+	        		else {
+	        			return {};
+	        		}
+	        	}
+	        }
+		}
+	}
 
 
 
