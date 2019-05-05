@@ -182,6 +182,9 @@
 
 		loadData(){
 			var raw_json = document.getElementById("form_car_data_1").value;
+			if (raw_json == ''){
+				return []
+			}
 			return JSON.parse(raw_json);
 		}
 
