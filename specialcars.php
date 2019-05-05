@@ -76,7 +76,7 @@ class SpecialCars extends Module
             $car_color_code = $data[0]['car_color_code'];
             $car_option_code = $data[0]['car_option_code'];
             $car_data = $data[0]['car_data'];
-            $product_id = $_REQUEST['form']['id_product'];
+            // $product_id = $_REQUEST['form']['id_product'];
             error_log("Saving car data : ");
             error_log($car_data);
             $content = "<script>var custom_field_data={'car_number':'".$car_number."', 'car_color_code':'".$car_color_code."', 'car_option_code':'".$car_option_code."', 'model_hierarchy' : '".$model_hierarchy."', 'car_data' : '".$car_data."'};</script>";
