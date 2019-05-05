@@ -88,8 +88,13 @@
 			cars_list.appendChild(car_container);
 
 			car_container.getElementsByClassName("car_model_form")[0].value = input_data["car_model"];
+			car_container.getElementsByClassName("car_model_form")[0].id = "car_model_form_"+this.id;
+
 			car_container.getElementsByClassName("car_type_form")[0].value = input_data["car_type"];
+			car_container.getElementsByClassName("car_type_form")[0].id = "car_type_form_"+this.id;
+
 			car_container.getElementsByClassName("car_version_form")[0].value = input_data["car_version"];
+			car_container.getElementsByClassName("car_version_form")[0].id = "car_version_form_"+this.id;
 
 			this.UI_container = car_container;
 		}
@@ -103,7 +108,9 @@
 		}
 
 		getFieldValue(field_key){
-			return this.getField(field_key).value;
+			var value = this.getField(field_key).value;
+			console.log("Value of field '"+field_key+"' of car #"+this.id+" is '"+value+"'");
+			return value;
 		}
 
 
@@ -116,6 +123,12 @@
 
 				field.addEventListener(
 		            'change', 
+		            function(){ controller.onChangeCheckup(); }, 
+		            false
+		        );
+
+		        field.addEventListener(
+		            'focusout', 
 		            function(){ controller.onChangeCheckup(); }, 
 		            false
 		        );
@@ -136,6 +149,7 @@
 		constructor(hierarchy_controller) {
 			this.last_id_given = 0;
 			this.hierarchy = hierarchy_controller;
+			this.validator = new FieldValidator(this.hierarchy);
 
 			this.car_list_data = this.loadData();
 
@@ -149,6 +163,7 @@
 	        );
 
 			this.generateUI();
+			this.validateFields();
 		}
 
 		addNewCar(car_data){
@@ -162,6 +177,7 @@
 			var car_field = new CarFieldController(car_data, this.hierarchy, this, this.last_id_given);
 			this.car_list.push(car_field);
 			this.last_id_given += 1;
+			this.validateFields();
 		}
 
 		loadData(){
@@ -187,14 +203,20 @@
 			this.onChangeCheckup();
 		}
 
+		validateFields(){
+			for (var i=0; i<this.car_list.length; i++){
+				var car_field = this.car_list[i];
+				this.validator.update(car_field);
+			}
+		}
+
 		onChangeCheckup(){
+			this.validateFields();
 			this.updateData();
 			this.saveData();
 		}
 
 		saveData(){
-			console.log("Saving data...");
-			console.log(this.car_list_data);
 			document.getElementById("form_car_data_1").value = JSON.stringify(this.car_list_data);
 		}
 
@@ -224,24 +246,63 @@
 
 		update(car_field){
 			var field_keys = ["car_model", "car_type", "car_version"];
+			console.log("Updating field #"+car_field.id);
 
 			for (var i=0; i<field_keys.length; i++){
-				field_key = field_keys[i];
-				var allowed_values = getAllowedValues(field_key);
-				
+				var field_key = field_keys[i];
+				console.log(field_key);
+
+				var allowed_values = this.getAllowedValues(field_key, car_field);
+
+				this.updateBucket(car_field, field_key, allowed_values);
+				this.validateField(car_field, field_key, allowed_values);
 			}
 
 		}
 
-		getAllowedValues(field_key) {
-			return Object.keys(this.getLocalHierarchy(field_key));
+		updateBucket(car_field, field_key, option_list){
+			var id = field_key+"_form_"+car_field.id;
+
+			// console.log("Updating field '#"+id+"', content : ");
+			// console.log(option_list);
+
+
+			$('#'+id).autocomplete({
+	            source : option_list,
+	            delay : 0,
+	            minLength: 0
+	        }).focus(function(){
+	            $(this).data("uiAutocomplete").search($(this).val());
+	        });
 		}
 
-		getLocalHierarchy(field_key) {
-			var local_hierarchy = this.hierarchy.data;
+		validateField(car_field, field_key, option_list){
+			var current_value = car_field.getFieldValue(field_key);
 
-	        for (var i=0; i<this.fields_order.length; i++){
-	        	var current_field_key = this.fields_order[i];
+			console.log("Validating field value '"+current_value+"' against list : ");
+			console.log(option_list);
+
+			if (option_list.includes(current_value)){
+				car_field.getField(field_key).classList.remove("form_wrong");
+				console.log("Form is OK");
+			}
+
+			else {
+				car_field.getField(field_key).classList.add("form_wrong");
+				console.log("Form is WRONG");
+			}
+		}
+
+		getAllowedValues(field_key, car_field) {
+			return Object.keys(this.getLocalHierarchy(field_key, car_field));
+		}
+
+		getLocalHierarchy(field_key, car_field) {
+			var local_hierarchy = this.hierarchy.data;
+			var fields_order = ["car_model", "car_type", "car_version"];
+
+	        for (var i=0; i<fields_order.length; i++){
+	        	var current_field_key = fields_order[i];
 
 	        	if (current_field_key == field_key){
 	        		return local_hierarchy;
@@ -249,7 +310,7 @@
 	        	
 	        	else {
 	        		var option_list = Object.keys(local_hierarchy);
-	        		var current_field_value = this.fields[current_field_key].value;
+	        		var current_field_value = car_field.getFieldValue(current_field_key);
 
 	        		if (option_list.includes(current_field_value)){
 	        			local_hierarchy = local_hierarchy[current_field_value];

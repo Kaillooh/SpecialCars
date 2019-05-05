@@ -1,6 +1,7 @@
 <script>
 
     var hierarchy = null;
+    var car_list_controller = null;
 
 
     $(document).ready(function() {
@@ -12,12 +13,16 @@
         var hierarchy = new HierarchyController();
         hierarchy.renderTreeUI();
 
-        var car_list_controller = new CarListController(hierarchy);
+        car_list_controller = new CarListController(hierarchy);
 
     })
 
     function disp_fields() {
         document.getElementById("true_fields").style.display="block";
+    }
+
+    function validate() {
+        car_list_controller.validateFields();
     }
 
 </script>

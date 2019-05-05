@@ -1,9 +1,5 @@
 
 <style>
-    .form_wrong{
-        border: 1px solid rgba(255, 50, 50, 150);
-    }
-
     .tree_category{
         width: 500px;
         margin-bottom: 5px;
@@ -43,6 +39,10 @@
     .car_model_form, .car_type_form, .car_version_form{
         padding: 5px;
         border: 1px solid #d9d9d9;
+    }
+
+    .form_wrong{
+        border: 1px solid rgba(255, 50, 50, 150);
     }
 
 </style>
