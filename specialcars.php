@@ -43,6 +43,8 @@ class SpecialCars extends Module
         if (!parent::install() OR       
             !$this->registerHook('displayAdminProductsExtra') OR
             !$this->registerHook('displayAdminProductsMainStepLeftColumnMiddle') OR
+            !$this->registerHook('displayProductExtraContent') OR
+            !$this->registerHook('displayProductAdditionalInfo') OR
             !$this->registerHook('actionAdminProductsControllerSaveBefore'))
             return false;
         else
@@ -193,4 +195,34 @@ class SpecialCars extends Module
         }
 
     } 
+
+    public function hookDisplayProductExtraContent($params){
+        try{
+            // $this->logObject("Display product params", $params["product"]->id);
+            $product_id = $params["product"]->id;
+            $content = $this->generateData($product_id);
+            error_log('Content : "'.$content.'"');
+            $this->display_data = $content;
+            return $content;
+
+        } catch (Exception $e) {
+            error_log("Error caught in 'hookDisplayProductExtraContent'");
+            error_log($e->getMessage());
+        }
+    }
+
+    public function hookDisplayProductAdditionalInfo($params){
+        try{
+            error_log("Hey from display additional infos ! ");
+            $content = $this->display(__FILE__, 'extra_info_tab.tpl');
+            error_log('Content : "'.$content.'"');
+            // $this->logObject("Display product params", array_keys($params));
+            // $this->logObject("Display product params", $params['product']);
+            return $this->display_data.$content;
+
+        } catch (Exception $e) {
+            error_log("Error caught in 'hookDisplayProductAdditionalInfo'");
+            error_log($e->getMessage());
+        }
+    }
 }
