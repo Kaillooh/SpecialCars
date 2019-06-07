@@ -138,7 +138,7 @@
 			var car_id = this.id;
 			close_btn.addEventListener(
 	            'click',
-	            // function(event){ console.log("Attempting to close car #"+car_id); controller.removeCar(car_id); },
+	            function(event){ /*console.log("Attempting to close car #"+car_id);*/ controller.removeCar(car_id); },
 	            false
 	        );
 		}
