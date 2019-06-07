@@ -35,7 +35,7 @@
 			var source_field = document.getElementById(source_field_id);
 			var target_field = document.getElementById(target_field_id);
 
-			console.log("Syncing '"+source_field_id+"' to '"+target_field_id+"'");
+			// console.log("Syncing '"+source_field_id+"' to '"+target_field_id+"'");
 
 			target_field.value = source_field.value;
 		}
@@ -109,7 +109,7 @@
 
 		getFieldValue(field_key){
 			var value = this.getField(field_key).value;
-			console.log("Value of field '"+field_key+"' of car #"+this.id+" is '"+value+"'");
+			// console.log("Value of field '"+field_key+"' of car #"+this.id+" is '"+value+"'");
 			return value;
 		}
 
@@ -138,7 +138,7 @@
 			var car_id = this.id;
 			close_btn.addEventListener(
 	            'click',
-	            function(event){ console.log("Attempting to close car #"+car_id); controller.removeCar(car_id); },
+	            // function(event){ console.log("Attempting to close car #"+car_id); controller.removeCar(car_id); },
 	            false
 	        );
 		}
@@ -249,11 +249,11 @@
 
 		update(car_field){
 			var field_keys = ["car_model", "car_type", "car_version"];
-			console.log("Updating field #"+car_field.id);
+			// console.log("Updating field #"+car_field.id);
 
 			for (var i=0; i<field_keys.length; i++){
 				var field_key = field_keys[i];
-				console.log(field_key);
+				// console.log(field_key);
 
 				var allowed_values = this.getAllowedValues(field_key, car_field);
 
@@ -282,17 +282,17 @@
 		validateField(car_field, field_key, option_list){
 			var current_value = car_field.getFieldValue(field_key);
 
-			console.log("Validating field value '"+current_value+"' against list : ");
-			console.log(option_list);
+			// console.log("Validating field value '"+current_value+"' against list : ");
+			// console.log(option_list);
 
 			if (option_list.includes(current_value)){
 				car_field.getField(field_key).classList.remove("form_wrong");
-				console.log("Form is OK");
+				// console.log("Form is OK");
 			}
 
 			else {
 				car_field.getField(field_key).classList.add("form_wrong");
-				console.log("Form is WRONG");
+				// console.log("Form is WRONG");
 			}
 		}
 

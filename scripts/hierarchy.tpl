@@ -33,7 +33,7 @@
 		newElement(){
 			var new_value = document.getElementById("tree_new_element").value;
 	        document.getElementById("tree_new_element").value = "";
-	        console.log("New value : "+new_value);
+	        // console.log("New value : "+new_value);
 	        if (new_value == ""){
 	            return;
 	        }
@@ -48,7 +48,7 @@
 
 		deleteElement(element){
 			var element_name = element.parentNode.previousSibling.innerHTML;
-	        console.log(element_name);
+	        // console.log(element_name);
 	        var tree = this.getLocalTree();
 	        delete tree[element_name];
 	        this.renderTreeUI();
@@ -63,7 +63,7 @@
 		saveHierarchyData(){
 			var save_field = document.getElementById("form_model_hierarchy_1");
 	        var saved_content = JSON.stringify(this.data);
-	        console.log("SAVING : "+saved_content);
+	        // console.log("SAVING : "+saved_content);
 	        save_field.value = JSON.stringify(this.data);
 
 	        //handleAllInputs();
@@ -104,7 +104,7 @@
 	            'click',
 	            function(event) {
 	                tree.current_position.push(event.target.innerHTML);
-	                console.log(tree.current_position);
+	                // console.log(tree.current_position);
 	                tree.renderTreeUI();
 	            },
 	            false

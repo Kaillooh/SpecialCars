@@ -16,6 +16,8 @@
 	.tabs > p{
 		margin-bottom: 0px;
 		font-style: bold;
+		color : #232323;
+		font-weight: 700;
 	}
 
 	.tabs > p > i{
@@ -24,9 +26,14 @@
 </style>
 
 
-<div class="tabs">
+<div class="tabs product-features">
 	<h2>Caractéristiques</h2>
 	<p id="car_number"><b>Serial : </b><i></i></p>
 	<p id="car_color_code"><b>Color : </b><i></i></p>
 	<p id="car_option_code"><b>Option : </b><i></i></p>
+
+	<dl class="data-sheet">
+		<dt class="name">Serial number</dt>
+		<dd class="value">Trucmuche</dd>
+	</dl>
 </div>

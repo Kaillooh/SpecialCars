@@ -7,7 +7,7 @@
     $(document).ready(function() {
 
         var field_controller = new CommonFieldController(hierarchy);
-        console.log("Loading content ?");
+        // console.log("Loading content ?");
         field_controller.loadFieldContent();
 
         var hierarchy = new HierarchyController();
