@@ -93,12 +93,13 @@ class SpecialCars extends Module
 
     public function hookDisplayAdminProductsMainStepLeftColumnMiddle($params){
         try{
-            error_log("Hook 'displayAdminProductsMainStepLeftColumnMiddle' running");
+            error_log("Hook 'displayAdminProductsMainStepLeftColumnMiddle' running (test)");
             
-            $scripts = array('newfieldstut.tpl', 'scripts/hierarchy.tpl', 'scripts/fields.tpl', 'scripts/main_script.tpl');
+            $scripts = array('newfieldstut.tpl', 'scripts/hierarchy.tpl', 'scripts/fields.tpl', 'scripts/search_opti.tpl', 'scripts/main_script.tpl');
 
             $content = "";
             foreach ($scripts as $script) {
+                error_log("Adding script '".$script."'");
                 $content = $content.$this->display(__FILE__, $script);
             }
 
