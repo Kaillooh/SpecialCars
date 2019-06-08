@@ -45,6 +45,8 @@ class SpecialCars extends Module
             !$this->registerHook('displayAdminProductsMainStepLeftColumnMiddle') OR
             !$this->registerHook('displayProductExtraContent') OR
             !$this->registerHook('displayProductAdditionalInfo') OR
+            !$this->registerHook('actionProductSave') OR
+            !$this->registerHook('actionProductAttributeUpdate') OR
             !$this->registerHook('actionAdminProductsControllerSaveBefore'))
             return false;
         else
@@ -66,7 +68,7 @@ class SpecialCars extends Module
             error_log("Generating data");
             $query = "SELECT * FROM ps_product WHERE `id_product`=".$product_id;
             $data = Db::getInstance()->executeS($query);
-            $this->logObject("SQL data", $data);
+            // $this->logObject("SQL data", $data);
 
             $query2 = "SELECT * FROM ps_model_hierarchy WHERE `id`=1";
             $data2 = Db::getInstance()->executeS($query2);
@@ -224,6 +226,30 @@ class SpecialCars extends Module
 
         } catch (Exception $e) {
             error_log("Error caught in 'hookDisplayProductAdditionalInfo'");
+            error_log($e->getMessage());
+        }
+    }
+
+
+
+    public function hookActionProductSave($params) {
+        try{
+            error_log("Hey from product save ! ");
+            // $this->logObject("Product save params", $params);
+
+        } catch (Exception $e) {
+            error_log("Error caught in 'hookActionProductSave'");
+            error_log($e->getMessage());
+        }
+    }
+
+    public function hookActionProductAttributeUpdate($params) {
+        try{
+            error_log("Hey from product attribute update ! ");
+            $this->logObject("Product attribute update params", $params);
+
+        } catch (Exception $e) {
+            error_log("Error caught in 'hookActionProductSave'");
             error_log($e->getMessage());
         }
     }

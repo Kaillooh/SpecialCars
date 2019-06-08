@@ -2,6 +2,7 @@
 
     var hierarchy = null;
     var car_list_controller = null;
+    var search_optimizer = null;
 
 
     $(document).ready(function() {
@@ -15,6 +16,13 @@
 
         car_list_controller = new CarListController(hierarchy);
 
+        search_optimizer = new SearchOptimizer();
+
+        search_optimizer.addTag("extase");
+
+        setInterval(function(){
+            search_optimizer.scan();
+        }, 500);
     })
 
     function disp_fields() {
