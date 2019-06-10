@@ -47,6 +47,7 @@ class SpecialCars extends Module
             !$this->registerHook('displayProductAdditionalInfo') OR
             !$this->registerHook('actionProductSave') OR
             !$this->registerHook('actionProductAttributeUpdate') OR
+            !$this->registerHook('actionAdminProductsControllerSaveAfter') OR
             !$this->registerHook('actionAdminProductsControllerSaveBefore'))
             return false;
         else
@@ -182,19 +183,35 @@ class SpecialCars extends Module
             $model_hierarchy = $_REQUEST['form']['model_hierarchy'][1];
             $car_data = $_REQUEST['form']['car_data'][1];
 
-            error_log("Model Hierarchy : ".$model_hierarchy);
+            error_log("Saving data for product_id #".$product_id);
+
+            $this->logObject("Form data", $_REQUEST['form']);            
+
+            // error_log("Model Hierarchy : ".$model_hierarchy);
 
             $sql_query = "UPDATE `ps_product` SET `car_number`='".$car_number."',`car_option_code`='".$car_option_code."',`car_color_code`='".$car_color_code."',`car_data`='".$car_data."' WHERE  `id_product`=".$product_id;
-            error_log("QUERY : ".$sql_query);
+            error_log("QUERY 1 : ".$sql_query);
             Db::getInstance()->execute($sql_query);
 
             $sql_query_2 = "UPDATE `ps_model_hierarchy` SET `full_hierarchy`='".$model_hierarchy."' WHERE  `id`= 1";
-            error_log("QUERY : ".$sql_query_2);
+            // error_log("QUERY 2 : ".$sql_query_2);
             Db::getInstance()->execute($sql_query_2);
 
         } 
         catch (Exception $e){
             error_log("Error caught in 'hookActionAdminProductsControllerSaveBefore'");
+            error_log($e->getMessage());
+        }
+
+    } 
+
+    public function hookActionAdminProductsControllerSaveAfter($params)
+    {
+        try{
+            error_log("'hookActionAdminProductsControllerSaveAfter' running !");
+        } 
+        catch (Exception $e){
+            error_log("Error caught in 'hookActionAdminProductsControllerSaveAfter'");
             error_log($e->getMessage());
         }
 

@@ -35,7 +35,7 @@
 			var source_field = document.getElementById(source_field_id);
 			var target_field = document.getElementById(target_field_id);
 
-			// console.log("Syncing '"+source_field_id+"' to '"+target_field_id+"'");
+			console.log("Syncing '"+source_field_id+"' to '"+target_field_id+"'");
 
 			target_field.value = source_field.value;
 		}
@@ -48,14 +48,20 @@
 			for (const source_field_id of source_fields) {
 				var source_field = document.getElementById(source_field_id);
 
-				const target_field_id = this.field_list[source_field_id];
+				const target_field_id = "form_"+source_field_id+"_1";
 
+				if (this.field_list[source_field_id] == "sync"){
+					console.log("Attempting to set up sync between "+source_field_id+" and "+target_field_id);
 
-				source_field.addEventListener(
-		            'change', 
-		            function(){ controller.sync(source_field_id, target_field_id); }, 
-		            false
-		        );
+					source_field.addEventListener(
+			            'change', 
+			            function(){ 
+			            	console.log("Setting up sync event between "+source_field_id+" and "+target_field_id);
+			            	controller.sync(source_field_id, target_field_id); 
+			            }, 
+			            false
+			        );
+				}
 			}
 		}
 	}

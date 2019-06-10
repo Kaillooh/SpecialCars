@@ -23,6 +23,8 @@
         setInterval(function(){
             search_optimizer.scan();
         }, 500);
+
+        field_controller.setupSync();
     })
 
     function disp_fields() {
