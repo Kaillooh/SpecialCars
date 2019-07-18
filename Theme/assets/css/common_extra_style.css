@@ -1,0 +1,81 @@
+
+
+body{
+	background-color: #EEEEEE;
+	background-image: url('road0_c1.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-attachment: fixed;
+}
+
+#wrapper{
+    /*display: none;*/
+    background-color: transparent;
+
+
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    -moz-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#footer{
+	background-color: white;
+	padding: 30px;
+
+	opacity: 0;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    -moz-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+
+    margin-top: 50px;
+}
+
+#header .logo{
+    opacity: 0;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    -moz-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+
+    height: 50px;
+    margin-top: 0px;
+}
+
+#_desktop_logo{
+    margin-top: 0px !important;
+}
+
+.header-top .search-widget form input[type=text]{
+    margin-top: 3px;
+}
+
+#wrapper>.container{
+    background-color: white;
+    padding: 30px;
+}
+
+#wrapper.full_page{
+    padding: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+#wrapper.full_page>.container{
+    margin: 0px;
+    /*transform: scale(0.8);*/
+    width: 100%;
+    max-width: auto;
+    height: 100%;
+    
+}
+
+.full_page article{
+    /*transform: scale(0.8);*/
+}
+
+.full_page .pagination{
+    bottom: 0px;
+    display: block;
+    position: absolute;
+}

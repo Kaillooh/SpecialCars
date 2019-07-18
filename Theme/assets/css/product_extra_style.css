@@ -1,0 +1,29 @@
+#wrapper .container{
+	background-color: white;
+	padding: 30px;
+	margin-top: 30px;
+	margin-bottom: 70px;
+}
+
+
+/*RESTRUCTURATION BARRE DE RECHERCHE*/
+
+#_desktop_top_menu{
+	display: none !important;
+}
+
+#header .header-top .position-static{
+	float: right;
+}
+
+#header .header-top{
+	padding-bottom: 0.75rem; 
+}
+
+#header .header-nav{
+	margin-bottom: 15px;
+}
+
+#_desktop_logo{
+	margin-top: 7px;
+}
