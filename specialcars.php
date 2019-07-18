@@ -4,6 +4,10 @@ use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchContext;
+use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 
 if (!defined('_PS_VERSION_')) {
     exit;
@@ -48,7 +52,12 @@ class SpecialCars extends Module
             !$this->registerHook('actionProductSave') OR
             !$this->registerHook('actionProductAttributeUpdate') OR
             !$this->registerHook('actionAdminProductsControllerSaveAfter') OR
+            !$this->registerHook('productSearchProvider') OR
+            !$this->registerHook('displayHeader') OR
             !$this->registerHook('actionAdminProductsControllerSaveBefore'))
+
+
+
             return false;
         else
             return true;
@@ -269,5 +278,169 @@ class SpecialCars extends Module
             error_log("Error caught in 'hookActionProductSave'");
             error_log($e->getMessage());
         }
+    }
+
+    public function hookProductSearchProvider($params){
+        error_log("Hey from hookProductSearchProvider !");
+        return new CustomSearchEngine();
+    }
+
+    public function hookDisplayHeader($params){
+        error_log("Hey from hookDisplayHeader !");
+        $categories = $this->gatherCategories();
+
+        $query2 = "SELECT * FROM ps_model_hierarchy WHERE `id`=1";
+        $data2 = Db::getInstance()->executeS($query2);
+        $model_hierarchy = $data2[0]['full_hierarchy'];
+
+        $content = "<script>var categories=".json_encode($categories)."; var hierarchy = ".$model_hierarchy."</script>";
+
+        return $content;
+    }
+
+    private function gatherCategories(){
+        try{
+            $query = "SELECT * FROM ps_category";
+            $data = Db::getInstance()->executeS($query);
+            $category_id = array();
+
+            foreach ($data as $category) {
+                array_push($category_id, $category['id_category']);
+            }
+
+            $final_categories = array(1=>array(), 2=>array(), 3=>array(), 4=>array());
+
+            foreach ($category_id as $id) {
+                if ($id != 1 and $id != 2){
+                    $query = "SELECT * FROM ps_category_lang WHERE id_category=".$id;
+                    error_log($query);
+                    $data = Db::getInstance()->executeS($query);
+                    // $this->logObject("Category ".$id, $data);
+                    foreach ($data as $lang_cat) {
+                        // array_push($final_categories[$lang_cat['id_lang']], );
+                        $final_categories[$lang_cat['id_lang']][$lang_cat['name']] = $id;
+                    }
+                }
+            }
+
+            // error_log($final_categories);
+
+            return $final_categories;
+
+        } catch (Exception $e) {
+            error_log("Error caught in 'gatherCategories'");
+            error_log($e->getMessage());
+        }
+    }
+}
+
+class CustomSearchEngine implements ProductSearchProviderInterface{
+
+    public function runQuery(ProductSearchContext $context, ProductSearchQuery $params){
+        $this->logObject("Params", $params);
+
+        $search_params = $this->getSearchParams();
+        $this->logObject("Search params", $search_params);
+
+        $array_list = $this->selectAll();;
+
+        if (array_key_exists('brand', $search_params)){
+            $new_list = $this->selectBrand($search_params['brand']);
+            $array_list = $this->fuseList($new_list, $array_list);
+        }
+
+        if (array_key_exists('type', $search_params)){
+            $new_list = $this->selectType($search_params['type']);
+            $array_list = $this->fuseList($new_list, $array_list);
+        }
+
+        if (array_key_exists('model', $search_params)){
+            $new_list = $this->selectModel($search_params['model']);
+            $array_list = $this->fuseList($new_list, $array_list);
+        }
+
+        if (array_key_exists('car', $search_params)){
+            $new_list = $this->selectCar($search_params['car']);
+            $array_list = $this->fuseList($new_list, $array_list);
+        }
+
+        $this->logObject("Results", $array_list);
+        
+        $new_products = new ProductSearchResult();
+        $new_products->setProducts($array_list);
+        return $new_products;
+    }
+
+    private function fuseList($array1, $array2){
+        $new_array = array();
+        foreach ($array1 as $value1) {
+            foreach ($array2 as $value2) {
+                // error_log("Comparing ".$value1['id_product']." and ".$value2["id_product"]);
+                if ($value1['id_product'] == $value2["id_product"]){
+                    array_push($new_array, $value1);
+                }
+            }
+        }
+        return $new_array;
+    }
+
+    private function selectAll(){
+        $query = "SELECT * FROM `ps_product`";
+        return $this->query($query);
+    }
+
+    private function selectBrand($brand){
+        $brand = str_replace("+", " ", $brand);
+        $query = "SELECT * FROM `ps_product` WHERE car_data LIKE '%".$brand."%'";
+        return $this->query($query);
+    }
+
+    private function selectType($type){
+        $query = "SELECT * FROM `ps_category_product` WHERE id_category=".$type;
+        return $this->query($query);
+    }
+
+    private function selectCar($car){
+        $car = str_replace("+", " ", $car);
+        $query = "SELECT * FROM `ps_product` WHERE car_data LIKE '%".$car."%'";
+        return $this->query($query);
+    }
+
+    private function selectModel($model){
+        $model = str_replace("+", " ", $model);
+        $query = "SELECT * FROM `ps_product` WHERE car_data LIKE '%".$model."%'";
+        return $this->query($query);
+    }
+
+    private function query($query){
+        error_log($query);
+        $data = Db::getInstance()->executeS($query);
+
+        $product_id = array();
+
+        foreach ($data as $entry) {
+            array_push($product_id, array("id_product"=>$entry['id_product']));
+        }
+        return $product_id;
+    }
+
+    private function getSearchParams(){
+        $search_params = array();
+        error_log($_SERVER['REQUEST_URI']);
+
+        $possible_args = array("type", "brand", "model", "car");
+
+        foreach ($possible_args as $arg) {
+            if (isset($_GET[$arg])){
+                $search_params[$arg] = $_GET[$arg];
+            }
+        }
+
+        return $search_params;
+    }
+
+    private function logObject($label, $object) {
+        $array_txt = var_export($object, TRUE);
+        error_log($label." : ".$array_txt);
     }
 }
