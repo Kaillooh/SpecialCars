@@ -251,6 +251,8 @@ function launchSearch(){
 	var iframe = document.getElementById("full_products");
 	var url = "http://"+window.location.hostname+"/Prestashop/en/search?controller=search&iframe=on";
 
+	console.log(selected_search_options);
+
 	var keys = Object.keys(selected_search_options);
 	for (var i=0; i<keys.length; i++){
 		var element = selected_search_options[keys[i]];
