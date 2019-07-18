@@ -273,7 +273,9 @@ function launchSearch(){
 			url = url+"&model="+element;
 		} 
 		else if (keys[i] == "type_category"){
-			url = url+"&type="+categories[1][element];
+			if (element != ""){
+				url = url+"&type="+categories[1][element];
+			}
 		}
 	}
 	console.log(url);
